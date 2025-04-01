@@ -1,0 +1,15 @@
+werkzeug==2.3.7
+Flask
+flask_sqlalchemy
+flask_login
+flask_wtf
+WTForms
+email_validator
+flask_qrcode
+pyotp
+python-dotenv
+MarkupSafe
+cryptography
+bcrypt
+Flask-Talisman
+rsa

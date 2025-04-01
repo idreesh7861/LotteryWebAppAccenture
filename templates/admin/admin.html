@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script type="text/javascript" src="{{ url_for('static', filename='rng.js') }}"></script>
+<h3 class="title is-3">Lottery Web Application Admin</h3>
+<h4 class="subtitle is-4">
+    Welcome, {{ name }}
+</h4>
+
+
+<div class="column is-4 is-offset-4">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <h4 class="title is-4">Lottery</h4>
+    <div class="box">
+        {# render play again button if current lottery round has been played #}
+        <form action="/generate_winning_draw">
+            <div>
+                <button class="button is-info is-centered">Generate Winning Draw</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<div class="column is-4 is-offset-4">
+
+    <div class="box">
+        {% if winning_draw %}
+            <div class="field">
+                <p>Round {{ winning_draw.lottery_round }}</p>
+                <p>{{ winning_draw.numbers }}</p>
+            </div>
+        {% endif %}
+        <form action="/view_winning_draw">
+            <div>
+                <button class="button is-info is-centered">View Winning Draw</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="column is-8 is-offset-2">
+
+    <div class="box">
+        {% if results %}
+            <div class="field">
+                {% for result in results %}
+                    <p>{{ result }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form action="/run_lottery">
+            <div>
+                <button class="button is-info is-centered">Run Lottery</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="column is-10 is-offset-1">
+
+
+    <h4 class="title is-4">Current Users</h4>
+    <div class="box">
+        {% if current_users %}
+            <div class="field">
+                <table class="table">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Phone No.</th>
+                        <th>Date of Birth</th>
+                        <th>Postcode</th>
+                        <th>Role</th>
+                    </tr>
+                    {% for user in current_users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.firstname }}</td>
+                            <td>{{ user.lastname }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.dob }}</td>
+                            <td>{{ user.postcode }}</td>
+                            <td>{{ user.role }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+        <form action="/view_all_users">
+            <div>
+                <button class="button is-info is-centered">View All Users</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="column is-8 is-offset-2" id="test">
+    <h4 class="title is-4">Security Logs</h4>
+    <div class="box">
+        {% if logs %}
+            <div class="field">
+            <table class="table">
+                <tr>
+                    <th>Last 10 Security Log Entries</th>
+                </tr>
+                {% for entry in logs %}
+                    <tr>
+                        <td>{{ entry }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+        <form action="/logs">
+            <div>
+                <button class="button is-info is-centered">View Logs</button>
+            </div>
+        </form>
+        </div>
+    </div>
+
+<div class="column is-8 is-offset-2" id="test">
+    <h4 class="title is-4">User Activity Logs</h4>
+    <div class="box">
+        {% if current_user_logs %}
+            <div class="field">
+            <table class="table">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Registration Date and Time</th>
+                        <th>Current Log-In Date and Time</th>
+                        <th>Previous Log-In Date and Time</th>
+                        <th>IP of Current Log-In Request</th>
+                        <th>IP of Last Log-In Request</th>
+                        <th>Count of successful user log ins</th>
+                    </tr>
+                    {% for user in current_user_logs %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.registered_on }}</td>
+                            <td>{{ user.current_login }}</td>
+                            <td>{{ user.last_login }}</td>
+                            <td>{{ user.current_login_ip }}</td>
+                            <td>{{ user.last_login_ip }}</td>
+                            <td>{{ user.successful_logins }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+        {% endif %}
+        {% if not current_user_logs %}
+        <form action="/view_user_activity">
+            <div>
+                <button class="button is-info is-centered">View User Activity</button>
+            </div>
+        </form>
+        {% endif %}
+        </div>
+    </div>
+
+ <div class="column is-8 is-offset-2">
+        <h3 class="title is-3">Register</h3>
+        <div class="box">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="notification is-danger">
+                        {{ messages[0] }}.
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% if form %}
+            <form method="POST">
+                <div class="field">
+                    {{ form.csrf_token() }}
+                    <div class="control">
+                        {{ form.email(class="input", placeholder="Email") }}
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.firstname(class="input", placeholder="First Name") }}
+                        {% for error in form.firstname.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.lastname(class="input", placeholder="Last Name") }}
+                        {% for error in form.lastname.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.phone(class="input", placeholder="Phone") }}
+                        {% for error in form.phone.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.dob(class="input", placeholder="Date of Birth") }}
+                        {% for error in form.dob.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.postcode(class="input", placeholder="Postcode") }}
+                        {% for error in form.postcode.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.password(class="input", placeholder="Password") }}
+                        {% for error in form.password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.confirm_password(class="input", placeholder="Confirm Password") }}
+                        {% for error in form.confirm_password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div>
+                    {{ form.submit(class="button is-info is-centered") }}
+                </div>
+            </form>
+            {% endif %}
+            <form action="/register_admin">
+            {% if not form %}
+                <div>
+                    <button class="button is-info is-centered">Register Admin</button>
+                </div>
+            {% endif %}
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
