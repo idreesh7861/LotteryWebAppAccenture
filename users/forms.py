@@ -7,14 +7,14 @@ from datetime import datetime
 
 def validate_phone(self, phone):
     # Regex for Phone Number Validation
-    p = re.compile("^\d{4}-\d{3}-\d{4}$")
+    p = re.compile(r"^\d{4}-\d{3}-\d{4}$")
     if not p.match(phone.data):
         raise ValidationError("Phone number must be in the form: 1234-567-8910")
 
 
 def validate_password(self, password):
     # Regex for Password Validation
-    p = re.compile("^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\d]).*$")
+    p = re.compile(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\d]).*$")
     if not p.match(password.data):
         raise ValidationError(
             "Password must contain at least 1 digit, at least 1 lowercase and at least 1 uppercase character."
@@ -40,7 +40,7 @@ def validate_dob(form, dob):
 
 def validate_postcode(self, postcode):
     # Regex for Postcode Validation
-    p = re.compile("^(?:[A-Z]\d\s\d[A-Z]{2}|[A-Z]{2}\d\s\d[A-Z]{2}|[A-Z]\d[A-Z]\s\d[A-Z]{2})$")
+    p = re.compile(r"^(?:[A-Z]\d\s\d[A-Z]{2}|[A-Z]{2}\d\s\d[A-Z]{2}|[A-Z]\d[A-Z]\s\d[A-Z]{2})$")
     if not p.match(postcode.data):
         raise ValidationError(
             """Postcode must be of the following forms:
